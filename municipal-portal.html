@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Municipal Complaint Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .card-header {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .card-content {
+            padding: 1rem;
+        }
+
+        /* Tabs Styles */
+        .tabs-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab-trigger {
+            padding: 0.75rem;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tab-trigger.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: #2563eb;
+        }
+
+        /* Alert Styles */
+        .alert {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #ecfdf5;
+            color: #065f46;
+            border-radius: 0.25rem;
+        }
+
+        /* Complaints List Styles */
+        .complaint-item {
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .complaint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .complaint-status {
+            padding: 0.25rem 0.5rem;
+            background: #fef3c7;
+            color: #92400e;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .no-complaints {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card header-card">
+            <div class="card-header">
+                <h1 class="card-title">
+                    <i class="fas fa-building"></i>
+                    Municipal Complaint Management System
+                </h1>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tabs-list">
+                <button class="tab-trigger active" data-tab="submit">
+                    <i class="fas fa-users"></i> Submit Complaint
+                </button>
+                <button class="tab-trigger" data-tab="track">
+                    <i class="fas fa-clipboard-list"></i> Track Complaints
+                </button>
+            </div>
+
+            <div class="tab-content active" id="submit-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Submit a New Complaint</h2>
+                    </div>
+                    <div class="card-content">
+                        <form id="complaintForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input type="text" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="tel" name="phone" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select name="category">
+                                        <option value="roads">Roads</option>
+                                        <option value="water">Water Supply</option>
+                                        <option value="sanitation">Sanitation</option>
+                                        <option value="electricity">Street Lights</option>
+                                        <option value="garbage">Garbage Collection</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Address</label>
+                                <textarea name="address" rows="2" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea name="description" rows="3" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <select name="priority">
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="submit-btn">Submit Complaint</button>
+                        </form>
+
+                        <div class="alert" id="successAlert" style="display: none;">
+                            Your complaint has been submitted successfully!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="track-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Track Your Complaints</h2>
+                    </div>
+                    <div class="card-content">
+                        <div id="complaintsContainer">
+                            <div class="no-complaints">No complaints submitted yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store complaints in localStorage
+        let complaints = JSON.parse(localStorage.getItem('complaints')) || [];
+
+        // DOM Elements
+        const complaintForm = document.getElementById('complaintForm');
+        const successAlert = document.getElementById('successAlert');
+        const complaintsContainer = document.getElementById('complaintsContainer');
+        const tabTriggers = document.querySelectorAll('.tab-trigger');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Tab Switching
+        tabTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                tabTriggers.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                trigger.classList.add('active');
+                document.getElementById(`${trigger.dataset.tab}-tab`).classList.add('active');
+            });
+        });
+
+        // Form Submission
+        complaintForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Get form data
+            const formData = new FormData(complaintForm);
+            const complaintData = {
+                id: Date.now(),
+                status: 'pending',
+                dateSubmitted: new Date().toLocaleDateString(),
+            };
+
+            // Convert FormData to object
+            for (let [key, value] of formData.entries()) {
+                complaintData[key] = value;
+            }
+
+            // Add new complaint
+            complaints.push(complaintData);
+            
+            // Save to localStorage
+            localStorage.setItem('complaints', JSON.stringify(complaints));
+
+            // Reset form
+            complaintForm.reset();
+
+            // Show success message
+            successAlert.style.display = 'block';
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 3000);
+
+            // Update complaints display
+            updateComplaintsDisplay();
+        });
+
+        // Update Complaints Display
+        function updateComplaintsDisplay() {
+            if (complaints.length === 0) {
+                complaintsContainer.innerHTML = '<div class="no-complaints">No complaints submitted yet</div>';
+                return;
+            }
+
+            complaintsContainer.innerHTML = complaints.map(complaint => `
+                <div class="complaint-item">
+                    <div class="complaint-header">
+                        <div>
+                            <h3 class="complaint-title">
+                                ${complaint.category.charAt(0).toUpperCase() + complaint.category.slice(1)} Issue
+                            </h3>
+                            <p>${complaint.description}</p>
+                        </div>
+                        <span class="complaint-status">${complaint.status}</span>
+                    </div>
+                    <div class="complaint-date">
+                        Submitted on: ${complaint.dateSubmitted}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initial complaints display
+        updateComplaintsDisplay();
+    </script>
+</body>
+</html>
